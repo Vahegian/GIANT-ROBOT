@@ -30,7 +30,21 @@ void setup() {
   while (!Serial) {
     ; // wait for serial port to connect.
   }
-  Serial.println("Serial connected!");  
+  
+  for (int i = 0 ; i<3; i++){
+    digitalWrite(LED_PIN, HIGH);
+    delay(200);
+    digitalWrite(LED_PIN, LOW);
+    delay(200);
+   }
+
+  Serial.println("1000");
+}
+
+void show_pot_data(){
+  Serial.print(map(analogRead(HEAD_POT_PIN),300,700,0,255));
+  Serial.print(":");
+  Serial.println(map(analogRead(BODY_POT_PIN),300,700,0,255));
 }
 
 
@@ -39,12 +53,12 @@ void manual_control(int deg_head, int deg_body, bool show_log){
   head_servo.write(deg_head);
   body_servo.write(deg_body);
   
-  if (show_log){
-    Serial.print(deg_head);
-    Serial.print(" << HEAD ");
-    Serial.print(deg_body);
-    Serial.println(" << BODY ");
-  }
+//  if (show_log){
+//    Serial.print(deg_head);
+//    Serial.print(" << HEAD ");
+//    Serial.print(deg_body);
+//    Serial.println(" << BODY ");
+//  }
   
   delay(SERVO_MOVE_DELAY_TIME);
   
@@ -57,7 +71,7 @@ void exec_command(String num){
      if numbers are less than 100 they must contain 0 in front of them to enable 
      correct parsing.   
   */
-  if (!num.equals("101\n")){
+  if (!num.equals("101\n") && !num.equals("101\n")){
     int deg_head = (num.substring(0,3)).toInt();
     int deg_body = (num.substring(3,6)).toInt();
   // Serial.println(deg_head);
@@ -68,8 +82,8 @@ void exec_command(String num){
         
         }
     
-    Serial.write(map(analogRead(HEAD_POT_PIN),300,700,0,255));
-    Serial.write(map(analogRead(BODY_POT_PIN),300,700,0,255));
+//    Serial.println(map(analogRead(HEAD_POT_PIN),300,700,0,255));
+//    Serial.println(map(analogRead(BODY_POT_PIN),300,700,0,255));
    }
 }
 
@@ -80,7 +94,8 @@ void loop() {
   if (Serial.available()){
 //    int num  = Serial.read()-'0';
     num = Serial.readString();
-    
+//    delay(10);
+//    Serial.println(num);
     if (num.equals("100\n")){
       Serial.println(num);
       option = 0;
@@ -89,6 +104,8 @@ void loop() {
       Serial.println(num);
       option = 1;
       digitalWrite(LED_PIN, LOW);
+    }else if (num.equals("102\n")){
+      show_pot_data();
     }
 
     if (option==1){
