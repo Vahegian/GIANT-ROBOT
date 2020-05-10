@@ -14,25 +14,13 @@ The captured frames can be obtained with a call to "getFrame" method
 
 
 class OpenCamera(threading.Thread):
-    def __init__(self, JIO):
-        self.jio = JIO
+    def __init__(self):
         threading.Thread.__init__(self)
         self.lock = threading.Lock()
         self.img = None
         self.video_capture = None
-        # self.createDialogBox()
-        if JIO == None:
-            self.createDialogBox()
-        else:
-            self.chose_the_right_camera()
-
-    def chose_the_right_camera(self):
-        with self.jio.stack_lock:
-            choice = self.jio.pop_from_stack()
-        if choice.get("cam") == 1:
-            self.selectCam(1)
-        else:
-            self.selectCam(0)
+        self.createDialogBox()
+        # self.selectCam(0)
 
     def selectCam(self, id):
         self.video_capture = cv2.VideoCapture(id)
