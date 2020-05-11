@@ -1,5 +1,10 @@
 from arduino_serial import ArduinoSerial
 
+MIN_BODY_DEG = 50
+MAX_BODY_DEG = 130
+MIN_HEAD_DEG = 40
+MAX_HEAD_DEG = 120
+
 class RobotControl:
     def __init__(self):
         self.__control_type = 100
@@ -39,20 +44,29 @@ if __name__ == "__main__":
     import time
     sta = RobotControl()
     sta.connect()
-    sta.activate_pot_control()
-    sta.move()
-    time.sleep(0.1)
-    while True:
-        print(sta.get_pot_values())
-        time.sleep(0.01)
-
-    # print(sta.activate_command_control())
-    # time.sleep(0.1)
-    # for i in reversed(range(30,130)):
-    #     sta.set_robot_deg(i,90)
-    #     sta.move()
-    #     time.sleep(0.01)
-    #     print(i, sta.get_pot_values())
     
-    # sta.set_robot_deg(80,90)
+    # sta.activate_pot_control()
     # sta.move()
+    # time.sleep(0.1)
+    # while True:
+    #     print(sta.get_pot_values())
+    #     time.sleep(0.01)
+
+
+    print(sta.activate_command_control())
+    time.sleep(0.1)
+    # while True:
+    #     for i in reversed(range(30,130)):
+    #         sta.set_robot_deg(i,i)
+    #         sta.move()
+    #         time.sleep(0.05)
+    #         print(i, sta.get_pot_values())
+
+    #     for i in range(30,130):
+    #         sta.set_robot_deg(i,i)
+    #         sta.move()
+    #         time.sleep(0.05)
+    #         print(i, sta.get_pot_values())
+        
+    #     sta.set_robot_deg(80,90)
+    #     sta.move()
