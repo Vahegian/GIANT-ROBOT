@@ -43,8 +43,8 @@ void setup() {
 }
 
 void show_pot_data(){
-  Serial.println(map(analogRead(HEAD_POT_PIN),300,700,0,255));
-  Serial.println(map(analogRead(BODY_POT_PIN),300,700,0,255));
+  Serial.println(map(analogRead(HEAD_POT_PIN),300,750,0,255));
+  Serial.println(map(analogRead(BODY_POT_PIN),300,750,0,255));
 }
 
 

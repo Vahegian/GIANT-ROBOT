@@ -55,18 +55,18 @@ if __name__ == "__main__":
 
     print(sta.activate_command_control())
     time.sleep(0.1)
-    # while True:
-    #     for i in reversed(range(30,130)):
-    #         sta.set_robot_deg(i,i)
-    #         sta.move()
-    #         time.sleep(0.05)
-    #         print(i, sta.get_pot_values())
+    while True:
+        for i in reversed(range(30,130)):
+            sta.set_robot_deg(i,i)
+            sta.move()
+            time.sleep(0.05)
+            print(i, sta.get_pot_values())
 
-    #     for i in range(30,130):
-    #         sta.set_robot_deg(i,i)
-    #         sta.move()
-    #         time.sleep(0.05)
-    #         print(i, sta.get_pot_values())
+        for i in range(30,130):
+            sta.set_robot_deg(i,i)
+            sta.move()
+            time.sleep(0.05)
+            print(i, sta.get_pot_values())
         
-    #     sta.set_robot_deg(80,90)
-    #     sta.move()
+        sta.set_robot_deg(80,90)
+        sta.move()
