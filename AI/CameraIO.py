@@ -1,6 +1,6 @@
 import threading
 import cv2
-import tkinter as tk
+# import tkinter as tk
 import numpy as np
 
 '''
@@ -12,16 +12,20 @@ The captured frames can be obtained with a call to "getFrame" method
 '''
 
 
+WIDTH = 480
+HEIGHT = 640
 
 
 class OpenCamera(threading.Thread):
-    def __init__(self):
+    def __init__(self, select_cam: bool = False):
         threading.Thread.__init__(self)
         self.lock = threading.Lock()
         self.img = None
         self.video_capture = None
-        self.createDialogBox()
-        # self.selectCam(0)
+        if select_cam:
+            self.createDialogBox()
+        else:
+            self.selectCam(0)
 
     def selectCam(self, id):
         self.video_capture = cv2.VideoCapture(id)
@@ -72,7 +76,7 @@ class OpenCamera(threading.Thread):
         if rotation_degree != None and picture is not None:
             picture = self.__rotate_img(picture, rotation_degree)
         elif picture is None:
-            return np.ones((50,50))
+            return np.ones((HEIGHT,WIDTH))
 
         return picture
 
@@ -80,7 +84,13 @@ class OpenCamera(threading.Thread):
         while True:
             ret, frame = self.video_capture.read()
             # self.img = cv2.resize(frame, (100, 100), interpolation=cv2.INTER_AREA)
-            self.img = cv2.resize(frame, (640, 480), interpolation=cv2.INTER_AREA)
+            # print(frame.shape)
+            self.img = cv2.resize(frame, (HEIGHT, WIDTH))
             self.lock.acquire()
             self.img = frame
             self.lock.release()
+
+if __name__ == "__main__":
+    cio = OpenCamera()
+    # cio.daemon = True
+    cio.start()

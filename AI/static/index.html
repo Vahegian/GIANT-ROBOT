@@ -1,0 +1,51 @@
+
+<body>
+    <img id="live_stream" src="">
+    <canvas id="canv" ></canvas>
+    <div id="result"></div>
+</body>
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf-8">
+    var socket = io();
+    socket.on('connect', function(message) {
+        socket.emit('image', "ready");
+        socket.emit('face', "ready");
+        // setInterval(() => {
+            
+        // }, 10);
+    });
+
+    var img = document.getElementById("live_stream")
+    var cnvs = document.getElementById("canv");
+    cnvs.style.position = "absolute";
+    cnvs.style.left = img.offsetLeft + "px";
+    cnvs.style.top = img.offsetTop + "px"
+
+    var ctx = cnvs.getContext("2d");
+    ctx.font = "30px Arial";
+    socket.on('image', function(data){
+        // console.log(data);
+        let b = new Blob([data], {type: 'image/jpg'});
+        let link = window.URL.createObjectURL(b)
+        img.src=link;
+        // console.log(link);
+    });
+
+    var res=document.getElementById("result")
+    socket.on('face', function(data){
+        ctx.clearRect(0, 0, cnvs.width, cnvs.height);
+        ctx.beginPath();
+        ctx.rect(data.tl[1], data.tl[0], data.br[1]-data.br[0], data.br[0]-data.tl[0]);
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#00ff00';
+        ctx.stroke();
+        ctx.fillText(data.name,data.tl[1], data.tl[0]+10);
+
+        res.innerHTML=""
+        for (let key in data){
+            res.append(key+" : "+data[key]+" | ")
+        }
+    });
+</script>

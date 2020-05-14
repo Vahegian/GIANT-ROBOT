@@ -25,6 +25,7 @@ class ArduinoSerial:
             time.sleep(0.1)
             print(f"serial connected on {self.port}")
         except Exception as e:
+            # pass
             print(f"Nothing is Connected to Serial Port > {self.port} \n {e}")
 
     def send(self, msg:list):
