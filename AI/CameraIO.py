@@ -69,9 +69,9 @@ class OpenCamera(threading.Thread):
         return cv2.warpAffine(mat, rotation_mat, (bound_w, bound_h))
 
     def getFrame(self, rotation_degree: int = None):
-        self.lock.acquire()
+        # self.lock.acquire()
         picture = self.img
-        self.lock.release()
+        # self.lock.release()
 
         if rotation_degree != None and picture is not None:
             picture = self.__rotate_img(picture, rotation_degree)
@@ -86,9 +86,10 @@ class OpenCamera(threading.Thread):
             # self.img = cv2.resize(frame, (100, 100), interpolation=cv2.INTER_AREA)
             # print(frame.shape)
             self.img = cv2.resize(frame, (HEIGHT, WIDTH))
-            self.lock.acquire()
-            self.img = frame
-            self.lock.release()
+            # self.lock.acquire()
+            with self.lock:
+                self.img = frame
+            # self.lock.release()
 
 if __name__ == "__main__":
     cio = OpenCamera()

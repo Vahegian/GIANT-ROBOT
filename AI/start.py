@@ -6,7 +6,7 @@ import cv2
 import base64
 from CameraIO import OpenCamera
 import time
-from master import Master
+from master import Master, CAM_ROTATION_DEG
 
 
 
@@ -34,7 +34,7 @@ def send_face_data(msg):
 @socketio.on('image')
 def send_data(msg):
     while True:
-        is_success, im_buf_arr = cv2.imencode(".jpg", oc.getFrame(90))
+        is_success, im_buf_arr = cv2.imencode(".jpg", oc.getFrame(CAM_ROTATION_DEG))
         emit("image", im_buf_arr.tobytes())
         # time.sleep(0.01)
 

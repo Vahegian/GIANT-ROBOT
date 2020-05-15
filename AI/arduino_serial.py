@@ -21,7 +21,7 @@ class ArduinoSerial:
         try:
             self.arduinoPort = port.Serial(self.port, 9600, timeout=1)
             while self.read() != "1000":
-                time.sleep(0.1)
+                time.sleep(0.01)
             time.sleep(0.1)
             print(f"serial connected on {self.port}")
         except Exception as e:

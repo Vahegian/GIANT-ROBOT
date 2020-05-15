@@ -1,15 +1,13 @@
 from CameraIO import OpenCamera, WIDTH
 from robot_controller import RobotControl
 from face_detector import FaceDetector
-import cv2
 import time
-import threading
+
+CAM_ROTATION_DEG = 90
 
 class Master:
     def __init__(self, camera):
         super().__init__()
-        self.left, self.right, self.face  = 60,60,False
-        self.comloc = threading.Lock()
         self.__oc = camera
 
         self.__robot = RobotControl()
@@ -17,22 +15,14 @@ class Master:
         self.__robot.activate_command_control()
         self.__robot.move()
         time.sleep(1)
-        # rt = threading.Thread(target=self.send_to_robot)
-        # rt.daemon = True
-        # rt.start()
+        self.head_deg, self.body_deg = 80, 90
         self.__fd = FaceDetector()
         
-        # dm = threading.Thread(target=self.draw_images)
-        # dm.daemon=True
-        # dm.start()
-        
-            # except:
-                # pass
 
     def get_face(self):
         while True:
             beg = time.time()
-            img = self.__oc.getFrame(90)
+            img = self.__oc.getFrame(CAM_ROTATION_DEG)
             tl, br, name = self.__fd.get_face(img)
             cur = time.time()
             yield tl, br, name, 1/(cur-beg)  
@@ -44,25 +34,25 @@ class Master:
 
 
     def send_to_robot(self, tl, br, name):
-        if name =="Vahe":
+        if name !="Unknown":
             area = abs((tl[0]-br[0])*(br[1]-tl[1]))
-            body_deg = int(self.map_val(area, 0, 100000, 80, 130))
+            self.body_deg = abs(int(self.map_val(area, 1000, 300000, 80, 130)))
 
             img_center = WIDTH/2
-            mid_point = ((br[1]-tl[1])/2)+tl[1]
+            percent_diff_from_middle = ((br[1]-tl[1])/img_center)*100
             
-            head_deg = 80
-            if mid_point > img_center+50:
-                head_deg = int(self.map_val(mid_point, 0, WIDTH, 30,80))
-            elif mid_point < img_center-50:
-                head_deg = int(self.map_val(mid_point, 0, WIDTH, 80,130))
+            if tl[1] > img_center+50 and br[1] > img_center:
+                self.head_deg = int(self.map_val(percent_diff_from_middle, 0, 100, 30,70))
+                print(1, percent_diff_from_middle, self.head_deg)
+            elif br[1] < img_center-50 and tl[1] < img_center:
+                self.head_deg = int(self.map_val(percent_diff_from_middle, 0, 100, 90,130))
+                print(2, percent_diff_from_middle, self.head_deg)
 
-            self.__robot.set_robot_deg(head_deg, body_deg)
+            self.__robot.set_robot_deg(self.head_deg, self.body_deg)
 
         self.__robot.move()
         time.sleep(0.05)
-        print("\t\t\t\t\t",self.__robot.get_pot_values())
-            
+        print("\t\t\t\t\t",self.__robot.get_pot_values())          
 
 
 if __name__ == "__main__":

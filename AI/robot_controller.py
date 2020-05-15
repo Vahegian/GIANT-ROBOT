@@ -21,7 +21,7 @@ class RobotControl:
     def activate_command_control(self):
         self.__control_type = 101
 
-    def get_pot_values(self):
+    def get_pot_values(self): 
         self.__arduino_serial.clear_input()
         try:
             vals = []
