@@ -4,7 +4,7 @@
 </head>
 
 
-<body>
+<body style="background-color: darksalmon;">
     <div class="container-fluid">
         <br><br><br>
         <div class="row">
@@ -27,7 +27,6 @@
             </div>
         </div>
     </div>
-
 </body>
 
 
@@ -43,9 +42,6 @@
     socket.on('connect', function (message) {
         socket.emit('image', "ready");
         socket.emit('face', "ready");
-        // setInterval(() => {
-
-        // }, 10);
     });
 
     var img = document.getElementById("live_stream")
@@ -57,11 +53,9 @@
     var ctx = cnvs.getContext("2d");
     ctx.font = "30px Arial";
     socket.on('image', function (data) {
-        // console.log(data);
         let b = new Blob([data], { type: 'image/jpg' });
         let link = window.URL.createObjectURL(b)
         img.src = link;
-        // console.log(link);
     });
 
     var res = document.getElementById("result")
