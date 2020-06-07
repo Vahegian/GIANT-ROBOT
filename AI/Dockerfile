@@ -3,7 +3,7 @@
 
 FROM nvidia/cuda:10.0-cudnn7-devel
 
-# Install face recognition dependencies
+COPY ./requirements.txt /home
 
 RUN apt-get update -y && apt-get upgrade -y && \
     apt-get install -y software-properties-common && \
@@ -17,29 +17,16 @@ RUN apt-get update -y && apt-get upgrade -y && \
     cmake \
     libsm6 \
     libxext6 \
-    libxrender-dev
-
-RUN pip3 install scikit-build
-
-# Install compilers
-
-RUN apt install -y software-properties-common
-RUN add-apt-repository ppa:ubuntu-toolchain-r/test
-RUN apt update -y; apt install -y gcc-6 g++-6
-
-RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 50
-RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 50
-
-#Install dlib 
-
-RUN git clone -b 'v19.16' --single-branch https://github.com/davisking/dlib.git
-RUN mkdir -p /dlib/build
-
-RUN cmake -H/dlib -B/dlib/build -DDLIB_USE_CUDA=1 -DUSE_AVX_INSTRUCTIONS=1
-RUN cmake --build /dlib/build
-
-RUN cd /dlib; python3.7 /dlib/setup.py install
-
-# Install the face recognition package
-
-RUN python3.7 -m pip install face_recognition opencv-python pyserial
+    libxrender-dev && \
+    pip3 install scikit-build && \
+    apt install -y software-properties-common && \
+    add-apt-repository ppa:ubuntu-toolchain-r/test && \
+    apt update -y; apt install -y gcc-6 g++-6 && \
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 50 && \
+    update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 50 && \
+    git clone -b 'v19.16' --single-branch https://github.com/davisking/dlib.git && \
+    mkdir -p /dlib/build && \
+    cmake -H/dlib -B/dlib/build -DDLIB_USE_CUDA=1 -DUSE_AVX_INSTRUCTIONS=1 && \
+    cmake --build /dlib/build && \
+    cd /dlib; python3.7 /dlib/setup.py install && \
+    python3.7 -m pip install -r /home/requirements.txt

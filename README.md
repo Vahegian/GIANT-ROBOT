@@ -1,5 +1,7 @@
 # GIANT-ROBOT
 
+<img src="demo.gif"/>
+
 Python "face_recognition" library is used for detecting and recognizing faces. The library uses the "siamese" network for recognition and returns locations of the detected faces. The location data is used to derive degrees of rotations for the robot's body and head. These are then transmitted over a serial port to the Arduino board which rotates the correct servos and returns the new position of the robot.
  
 The robot's positional data can be used for coding a PID controller to make the robot's motions smoother, or it can be used for creating a reinforcement learning agent to teach the robot how to move. Both will be implemented in the future.
